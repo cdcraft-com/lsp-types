@@ -1,5 +1,5 @@
 use super::*;
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Serialize, ser::SerializeStruct};
 use serde_repr::{Deserialize_repr, Serialize_repr};
 
 #[derive(Clone, PartialEq, Debug, Default, Deserialize, Serialize)]
@@ -1823,7 +1823,7 @@ pub struct ResponseError {
     #[doc = " A string providing a short description of the error."]
     pub message: String,
 }
-#[derive(Clone, PartialEq, Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, PartialEq, Debug, Default, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct ResponseMessage {
     #[doc = " The error object in case a request fails."]
@@ -1837,6 +1837,23 @@ pub struct ResponseMessage {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<serde_json::Value>,
 }
+
+impl Serialize for ResponseMessage {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer {
+        let mut s = serializer.serialize_struct("ResponseMessage", 3)?;
+        s.serialize_field("id", &self.id)?;
+        s.serialize_field("jsonrpc", &self.jsonrpc)?;
+        if let Some(error) = &self.error {
+            s.serialize_field("error", error)?;
+        } else {
+            s.serialize_field("result", &self.result)?;
+        }
+        s.end()
+    }
+}
+
 #[derive(Clone, PartialEq, Debug, Default, Deserialize, Serialize)]
 pub struct SaveOptions {
     #[doc = " The client is supposed to include the content on save."]
