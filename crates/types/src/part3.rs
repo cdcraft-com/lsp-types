@@ -928,7 +928,7 @@ pub struct InlayHintParams {
 }
 
 
-#[derive(Clone, PartialEq, Debug, Deserialize, Serialize)]
+#[derive(Clone, PartialEq, Debug, Default, Deserialize, Serialize)]
 pub struct InlayHint {
     #[doc = " The position inside the text document."]
     pub position: Position,
