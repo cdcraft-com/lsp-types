@@ -2323,7 +2323,7 @@ pub struct ServerCapabilities {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "colorProvider")]
     pub color_provider:
-        Option<OneOf3<bool, DocumentColorOptions, DocumentColorRegistrationOptions>>,
+    Option<OneOf3<bool, DocumentColorOptions, DocumentColorRegistrationOptions>>,
     #[doc = " The server provides completion support."]
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "completionProvider")]
@@ -2433,7 +2433,47 @@ pub struct ServerCapabilities {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "workspaceSymbolProvider")]
     pub workspace_symbol_provider: Option<OneOf<bool, WorkspaceSymbolOptions>>,
+
+    #[doc = "The server provides inlay hints."]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "inlayHintProvider")]
+    pub inlay_hint_provider : Option<OneOf3<bool, InlayHintOptions, InlayHintRegistrationOptions>>,
 }
+
+#[derive(Clone, Debug, PartialEq, Default, Deserialize, Serialize)]
+pub struct InlayHintOptions {
+    #[doc = "The server provides support to resolve additional information for an inlay hint item."]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "resolveProvider")]
+    pub resolve_provider: Option<bool>,
+    
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "workDoneProgress")]
+    pub work_done_progress: Option<bool>,
+}
+
+#[derive(Clone, Debug, PartialEq, Default, Deserialize, Serialize)]
+pub struct InlayHintRegistrationOptions {
+    #[doc = "The server provides support to resolve additional information for an inlay hint item."]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "resolveProvider")]
+    pub resolve_provider: Option<bool>,
+    
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "workDoneProgress")]
+    pub work_done_progress: Option<bool>,
+
+    #[doc = " A document selector to identify the scope of the registration. If set to null the document "]
+    #[doc = " selector provided on the client side will be used."]
+    #[serde(rename = "documentSelector")]
+    pub document_selector: serde_json::Value,
+
+    #[doc = "The id used to register the request. The id can be used to deregister the request again. See also Registration#id."]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+}
+
+
 
 pub type TextDocumentSync = OneOf<TextDocumentSyncOptions, TextDocumentSyncKind>;
 

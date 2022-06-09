@@ -908,3 +908,77 @@ pub type Decimal = f64;
 pub type Integer = i32;
 #[doc = " Defines an unsigned integer number in the range of 0 to 2^31 - 1."]
 pub type Uinteger = u32;
+
+
+
+
+#[derive(Clone, PartialEq, Debug, Deserialize, Serialize)]
+pub struct InlayHintParams {
+    #[doc = " The text document."]
+    #[serde(rename = "textDocument")]
+    pub text_document: TextDocumentIdentifier,
+
+    #[doc = " The range at which the message applies."]
+    pub range: Range,
+
+    #[doc = " An optional token that a server can use to report work done progress."]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "workDoneToken")]
+    pub work_done_token: Option<ProgressToken>,
+}
+
+
+#[derive(Clone, PartialEq, Debug, Deserialize, Serialize)]
+pub struct InlayHint {
+    #[doc = " The position inside the text document."]
+    pub position: Position,
+
+    pub label: OneOf<String, Vec<InlayHintLabelPart>>,
+
+    #[doc = " The kind of this hint. Can be omitted in which case the client should fall back to a reasonable default."]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub kind: Option<InlayHintKind>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "textEdits")]
+    pub text_edits : Option<Vec<TextEdit>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tooltip: Option<OneOf<String, MarkupContent>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "paddingLeft")]
+    pub padding_left : Option<bool>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "paddingRight")]
+    pub padding_right : Option<bool>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub data: Option<serde_json::Value>,
+}
+
+#[derive(Clone, PartialEq, Debug, Deserialize, Serialize, Copy)]
+pub enum InlayHintKind {
+    Type = 1,
+    Parameter = 2,
+}
+
+
+#[derive(Clone, PartialEq, Debug, Deserialize, Serialize)]
+pub struct InlayHintLabelPart {
+    #[doc = "The value of this label part."]
+    pub value: String,
+
+    #[doc = "The tooltip text when you hover over this label part. Depending on"]
+    #[doc = "the client capability `inlayHint.resolveSupport` clients might resolve"]
+    #[doc = "this property late using the resolve request."]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tooltip: Option<OneOf<String, MarkupContent>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub location: Option<Location>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub command: Option<Command>,
+}

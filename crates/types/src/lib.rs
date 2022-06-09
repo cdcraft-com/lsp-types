@@ -306,6 +306,8 @@ impl_req!(
 );
 impl_req!(MonikerParams, "textDocument/moniker", Vec<Moniker>);
 
+impl_req!(InlayHintParams, "textDocument/inlayHint", Option<Vec<InlayHint>>);
+
 pub trait FromNotice: Sized + serde::Serialize {
     const METHOD: &'static str;
 

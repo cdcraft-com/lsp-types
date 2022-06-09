@@ -294,7 +294,26 @@ pub struct ClientCapabilities {
     #[doc = " Workspace specific client capabilities."]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub workspace: Option<ClientCapabilitiesWorkspace>,
+
+    #[doc = "Client workspace capabilities specific to inlay hints."]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "inlayHint")]
+    pub inlay_hint: Option<InlayHintWorkspaceClientCapabilities>,
 }
+
+#[derive(Clone, PartialEq, Debug, Default, Deserialize, Serialize)]
+pub struct InlayHintWorkspaceClientCapabilities {
+    #[doc = "Whether the client implementation supports a refresh request sent from the server to the client."]
+    #[doc = "Note that this event is global and will force the client to refresh all"]
+    #[doc = "inlay hints currently shown. It should be used with absolute care and"]
+    #[doc = "is useful for situation where a server for example detects a project wide"]
+    #[doc = "change that requires such a calculation."]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "refreshSupport")]
+    pub refresh_support : Option<bool>,
+}
+
+
 #[derive(Clone, PartialEq, Debug, Default, Deserialize, Serialize)]
 pub struct CodeActionDisabled {
     #[doc = " Human readable description of why the code action is currently disabled."]
